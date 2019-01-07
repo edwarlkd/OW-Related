@@ -1,0 +1,119 @@
+Sub macro1_ed()
+
+' Declare and Initialize variables
+    Dim wsh As Worksheet
+    Dim rw As Range
+    Dim RowCount As Integer
+    Dim ColCount As Integer
+    Dim Bool0 As Integer
+    Set wsh = ActiveSheet
+    RowCount = 0
+    ColCount = 0
+    Bool0 = 0
+    
+    Dim MasterAcctNum As String
+    Dim AcctNum As String
+    Dim SPID As String
+    Dim YearMonth As String
+    MasterAcctNum = "0"
+    AcctNum = "0"
+    SPID = "0"
+    YearMonth = 0
+    
+    Dim MasterAcctNum2 As String
+    Dim AcctNum2 As String
+    Dim SPID2 As String
+    Dim YearMonth2 As String
+    MasterAcctNum2 = "0"
+    AcctNum2 = "0"
+    SPID2 = "0"
+    YearMonth2 = 0
+    
+' Loop thru the records and process the data
+' Eliminate records with no change in AE
+    Set wsh = ActiveSheet
+    For Each rw In wsh.Rows
+        
+        'Bypassing the initial step (Header in Excel)
+        If RowCount = 0 Then
+            RowCount = 1
+            GoTo NextIteration
+        End If
+
+        'End the loop if reaches last empty row
+        If wsh.Cells(rw.Row, 1).Value = "" And wsh.Cells(rw.Row, 2).Value = "" Then
+            'MsgBox "Last Record reached. My job is done here..."
+            Exit For
+        End If
+        
+        ' START!
+        ' MsgBox ("Row[" + Str(RowCount) + "]: " + wsh.Cells(rw.Row, 1).Value + "     Bool0: " + Str(Bool0))
+        
+        If (wsh.Cells(rw.Row, 11).Value) = 201810 Then
+            Bool0 = 1
+            MasterAcctNum = wsh.Cells(rw.Row, 1).Value
+            AcctNum = wsh.Cells(rw.Row, 3).Value
+            SPID = wsh.Cells(rw.Row, 6).Value
+            YearMonth = wsh.Cells(rw.Row, 11).Value
+            'MsgBox "(2018) - " + MasterAcctNum + "---" + AcctNum + "---" + SPID + "---" + YearMonth
+            
+        ElseIf (wsh.Cells(rw.Row, 11).Value) = 201811 Then
+            If Bool0 = 1 Then
+                ' Go compare with the good old data with the new
+                Bool0 = 1
+                MasterAcctNum2 = wsh.Cells(rw.Row, 1).Value
+                AcctNum2 = wsh.Cells(rw.Row, 3).Value
+                SPID2 = wsh.Cells(rw.Row, 6).Value
+                YearMonth2 = wsh.Cells(rw.Row, 11).Value
+                'MsgBox "[0] - " + MasterAcctNum + "---" + AcctNum + "---" + SPID + "---" + YearMonth
+                'MsgBox "[1] - " + MasterAcctNum2 + "---" + AcctNum2 + "---" + SPID2 + "---" + YearMonth2
+                
+                ' No change in AE. Just highlight the column
+                If (MasterAcctNum = MasterAcctNum2 And AcctNum = AcctNum2 And SPID = SPID2) Then
+                    ' No Ownership changed here
+                    'MsgBox "No Ownership Changed!"
+                    Bool0 = 0
+                Else
+                    ' Ownership changes here - Highlights the current and previous row
+                    'MsgBox "Ownership Changed!"
+                    Bool0 = 0
+                    wsh.Cells(rw.Row, 12).Value = "Changed!"
+                    wsh.Cells(rw.Row - 1, 12).Value = "Changed!"
+                End If
+            
+            
+            ElseIf Bool0 = 0 Then
+                'Reset the bool0 (ex. two 201811 in a row)
+                Bool0 = 0
+                MasterAcctNum = "RESET"
+                AcctNum = "RESET"
+                SPID = "RESET"
+                YearMonth = "RESET"
+            End If
+            
+        
+        End If
+                            
+   
+NextIteration:
+    RowCount = RowCount + 1
+    Next rw
+    
+End Sub
+
+
+
+'Below contains useful commands
+' Ctrl+Break to break out of a loop
+' MsgBox ("Row[" + Str(RowCount) + "]:   " + wsh.Cells(rw.Row, 1).Value)
+
+
+
+
+
+
+
+
+
+
+
