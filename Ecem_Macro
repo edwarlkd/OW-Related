@@ -69,16 +69,18 @@ Sub macro1_ed()
                 'MsgBox "[1] - " + MasterAcctNum2 + "---" + AcctNum2 + "---" + SPID2 + "---" + YearMonth2
                 
                 ' No change in AE. Just highlight the column
-                If (MasterAcctNum = MasterAcctNum2 And AcctNum = AcctNum2 And SPID = SPID2) Then
+                If (MasterAcctNum = MasterAcctNum2 And AcctNum = AcctNum2) Then
                     ' No Ownership changed here
                     'MsgBox "No Ownership Changed!"
-                    Bool0 = 0
-                Else
-                    ' Ownership changes here - Highlights the current and previous row
-                    'MsgBox "Ownership Changed!"
-                    Bool0 = 0
-                    wsh.Cells(rw.Row, 12).Value = "Changed!"
-                    wsh.Cells(rw.Row - 1, 12).Value = "Changed!"
+                    If (SPID <> SPID2) Then
+                        Bool0 = 0
+                        wsh.Cells(rw.Row, 13).Value = "Changed!"
+                        wsh.Cells(rw.Row - 1, 13).Value = "Changed!"
+                    Else
+                                            
+                    End If
+                    
+
                 End If
             
             
@@ -106,6 +108,7 @@ End Sub
 'Below contains useful commands
 ' Ctrl+Break to break out of a loop
 ' MsgBox ("Row[" + Str(RowCount) + "]:   " + wsh.Cells(rw.Row, 1).Value)
+
 
 
 
